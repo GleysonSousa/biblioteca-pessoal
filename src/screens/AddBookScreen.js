@@ -1,6 +1,22 @@
+import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
-export default function AddBookScreen() {
+export default function AddBookScreen({ onSave, goBack }) {
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [notes, setNotes] = useState('');
+
+  function handleSave() {
+    if (!title.trim()) return;
+
+    onSave({
+      id: Date.now(),
+      title,
+      author,
+      notes
+    });
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>➕ Adicionar Livro</Text>
@@ -8,22 +24,31 @@ export default function AddBookScreen() {
       <TextInput
         style={styles.input}
         placeholder="Título do livro"
+        value={title}
+        onChangeText={setTitle}
       />
 
       <TextInput
         style={styles.input}
         placeholder="Autor"
+        value={author}
+        onChangeText={setAuthor}
       />
 
       <TextInput
         style={[styles.input, styles.textArea]}
         placeholder="Observações"
+        value={notes}
+        onChangeText={setNotes}
         multiline
-        numberOfLines={4}
       />
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={handleSave}>
         <Text style={styles.buttonText}>Salvar</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={goBack} style={styles.back}>
+        <Text style={styles.backText}>← Voltar</Text>
       </TouchableOpacity>
     </View>
   );
@@ -60,5 +85,12 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontWeight: 'bold'
+  },
+  back: {
+    marginTop: 20,
+    alignItems: 'center'
+  },
+  backText: {
+    color: '#4f46e5'
   }
 });
